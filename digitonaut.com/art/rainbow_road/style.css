@@ -1,0 +1,120 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: black;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.haze {
+  width: 100%;
+  height: 50px;
+  position: absolute;
+  left: 0;
+  top: 35%;
+  margin-top: -25px;
+  z-index: 1;
+  background: linear-gradient(to bottom, #000, #000 55%, #000 65%, transparent);
+}
+
+.world {
+  width: 384px;
+  height: 100px;
+  position: absolute;
+  left: 50%;
+  top: 35%;
+  margin-top: -50px;
+  margin-left: -192px;
+  perspective: 100px;
+  transform: scale3d(0.2, 0.2, 1);
+}
+
+.road {
+  width: 100%;
+  height: 100%;
+  transform: rotate3d(1, 0, 0, 40deg) scale3d(0.9, 0.5, 1);
+}
+.road .segment {
+  position: absolute;
+  left: 0;
+  top: 0;
+  animation-name: forward;
+  animation-duration: 6s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.road .block {
+  float: left;
+  width: 48px;
+  height: 9px;
+  border: 1px solid black;
+  border-left: 3px solid black;
+  border-right: 3px solid black;
+  box-shadow: -4px 1px 0px 1px rgba(0, 0, 0, 0.35) inset;
+}
+.road .block.blue {
+  background: #3159ff;
+}
+.road .block.green {
+  background: #00fb00;
+}
+.road .block.yellow {
+  background: #fffb00;
+}
+.road .block.orange {
+  background: #ff7900;
+}
+.road .block.red {
+  background: #ff0000;
+}
+.road .block.violet {
+  background: #bd79ff;
+}
+.road .block.teal {
+  background: #00f4ba;
+}
+
+.delay-1 {
+  animation-delay: -0.75s;
+}
+
+.delay-2 {
+  animation-delay: -1.5s;
+}
+
+.delay-3 {
+  animation-delay: -2.25s;
+}
+
+.delay-4 {
+  animation-delay: -3s;
+}
+
+.delay-5 {
+  animation-delay: -3.75s;
+}
+
+.delay-6 {
+  animation-delay: -4.5s;
+}
+
+.delay-7 {
+  animation-delay: -5.25s;
+}
+
+.delay-8 {
+  animation-delay: -6s;
+}
+
+@keyframes forward {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 504px, 0);
+  }
+}

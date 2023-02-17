@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<!-- Mirrored from digitonaut.com/art/raycast_lines/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 16 Feb 2023 11:04:58 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset='utf-8'\>
+<meta name='apple-mobile-web-app-capable' content='yes'><meta name='apple-mobile-web-app-status-bar-style' content='black-translucent'><title>Raycast Lines</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<div id="app">
+  <renderer ref="renderer" resize="window" :auto-clear="false" mouse-move mouse-raycast orbit-ctrl>
+    <camera :position="{ z: 300 }"></camera>
+    <scene>
+      <ambient-light color="#808080"></ambient-light>
+      <point-light color="#ff6000"></point-light>
+      <point-light color="#0060ff" :intensity="0.5" ref="light"></point-light>
+      <point-light color="#ff6000" :intensity="0.5" :position="{ x: 100}"></point-light>
+      <point-light color="#0000ff" :intensity="0.5" :position="{ x: -100}"></point-light>
+
+      <instanced-mesh ref="imesh" :count="NUM_INSTANCES">
+        <box-geometry :width="2" :height="2" :depth="10"></box-geometry>
+        <standard-material transparent :opacity="0.9" :metalness="0.8" :roughness="0.5"></standard-material>
+      </instanced-mesh>
+    </scene>
+
+    <effect-composer>
+      <render-pass></render-pass>
+      <unreal-bloom-pass :strength="1"></unreal-bloom-pass>
+      <halftone-pass :radius="1" :scatter="0"></halftone-pass>
+    </effect-composer>
+  </renderer>
+</div>
+
+ <script type="module" src="script.js"></script>
+
+</body>
+
+<!-- Mirrored from digitonaut.com/art/raycast_lines/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 16 Feb 2023 11:04:59 GMT -->
+</html>

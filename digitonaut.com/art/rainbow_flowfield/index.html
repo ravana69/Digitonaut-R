@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<!-- Mirrored from digitonaut.com/art/rainbow_flowfield/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 16 Feb 2023 11:04:36 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset='utf-8'\>
+<meta name='apple-mobile-web-app-capable' content='yes'><meta name='apple-mobile-web-app-status-bar-style' content='black-translucent'><title>Rainbow Flowfield</title>
+
+<style>
+canvas {
+	position:fixed;
+	left:50%; top:50%;
+	transform:translate(-50%,-50%);
+	border:0px; outline:0px;
+}
+</style>
+</head>
+<body style='margin:0px;overflow:hidden;background:#000;'>
+
+<script type="application/processing">
+int scl = 20;
+int refreshRate = 1000;
+
+float fieldStrength = 0.3;
+
+float zoffInc = 0.01;
+int angleMult = 2;
+
+float zoff = 0;
+float noiseInc = 0.1;
+
+int rows, cols;
+
+PVector[] flowfield;
+Particle[] particles = new Particle[10000];
+
+float h = 0;
+boolean colUp = true;
+
+void setup() {
+  //size(1200, 800, P2D);
+    size(screenWidth,screenHeight, P2D);
+  colorMode(HSB);
+
+  cols = width/scl;
+  rows = height/scl;
+
+  flowfield = new PVector[rows*cols];
+
+  createParticles();
+
+  background(0);
+}
+
+void draw() {
+  //background(0);
+  float yoff = 0;
+  for (int y = 0; y < rows; y++) {
+    float xoff = 0;
+    for (int x = 0; x < cols; x++) {
+      int index = x+y*cols;
+      float a = noise(xoff, yoff, zoff) * TWO_PI*angleMult;
+      xoff += noiseInc;
+
+      PVector v = PVector.fromAngle(0);
+      v.rotate(a);
+      v.setMag(fieldStrength);
+
+      flowfield[index] = v;
+
+      //pushMatrix();
+      //translate(x*scl, y*scl);
+      //rotate(v.heading());
+      //stroke(255);
+      //strokeWeight(1);
+      //line(0, 0, scl, 0);
+      //popMatrix();
+    }
+    yoff += noiseInc;
+  }
+  zoff += zoffInc;
+
+  for (int i = 0; i < particles.length; i++) {
+    particles[i].updateColor(color(h, 255, 255));
+    particles[i].edges();
+    particles[i].follow(flowfield);
+    particles[i].update();
+    particles[i].display();
+  }
+  
+  
+  if (colUp) {
+    h++;
+  } else {
+    h--;
+  }
+  
+  if (h > 255) {
+    colUp =false;
+    h = 255;
+  } else if(h < 0) {
+    colUp = true;
+    h = 0;
+  }
+  
+  if (frameCount%refreshRate == 0) {
+    //refresh();
+  }
+}
+
+void mouseClicked() {
+  if (mouseButton == LEFT) {
+    background(0);
+  }
+  
+  if (mouseButton == RIGHT) {
+    refresh();
+  }
+}
+
+void refresh() {
+  background(0);
+    createParticles();
+}
+
+void createParticles() {
+  for (int i = 0; i < particles.length; i++) {
+    particles[i] = new Particle();
+  }
+}
+
+class Particle {
+  private PVector pos;
+  private PVector vel;
+  private PVector acc;
+  
+  private PVector oldpos;
+  
+  private float maxSpeed;
+  
+  private color col;
+  
+  
+  public Particle() {
+    pos = new PVector(random(width-1), random(height-1));
+    vel = new PVector(0, 0);
+    acc = new PVector(0, 0);
+    
+    oldpos = new PVector(pos.x, pos.y);
+    
+    maxSpeed = 4;
+    
+    col = color(random(255), 255, 255);
+  }
+  
+  public void follow(PVector[] vectors) {
+    int x = floor(pos.x/scl);
+    int y = floor(pos.y/scl);
+
+    int index = x + y * cols;
+    
+    applyForce(vectors[index]);
+  }
+  
+  public void applyForce(PVector force) {
+    acc.add(force);
+  }
+  
+  public void display() {
+    stroke(col, 5);
+    strokeWeight(1);
+    line(pos.x, pos.y, oldpos.x, oldpos.y);
+    
+    updateOldPos();
+  }
+  
+  public void updateColor(color c) {
+    col = c;
+  }
+  
+  public void update() {
+    vel.add(acc);
+    vel.limit(maxSpeed);
+    pos.add(vel);
+    acc.mult(0);
+  }
+  
+  public void updateOldPos() {
+    oldpos.x = pos.x;
+    oldpos.y = pos.y;
+  }
+  
+  public void edges() {
+    if (pos.x > width-1) {
+      pos.x = 1;
+      updateOldPos();
+    }
+    
+    if (pos.x < 1) {
+      pos.x = width-1;
+      updateOldPos();
+    }
+    
+    if (pos.y > height-1) {
+      pos.y = 1;
+      updateOldPos();
+    }
+    
+    if (pos.y < 1) {
+      pos.y = height-1;
+      updateOldPos();
+    }
+  }
+}
+
+</script>
+
+<canvas> </canvas>
+<script src='processing.min.js'></script>
+</body>
+
+<!-- Mirrored from digitonaut.com/art/rainbow_flowfield/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 16 Feb 2023 11:04:36 GMT -->
+</html>

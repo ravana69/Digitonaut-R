@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<!-- Mirrored from digitonaut.com/art/retro_animas/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 16 Feb 2023 11:05:33 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset='utf-8'\>
+<meta name='apple-mobile-web-app-capable' content='yes'><meta name='apple-mobile-web-app-status-bar-style' content='black-translucent'><title>Retro Animas</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<shader-doodle>
+  <script type="x-shader/x-fragment">
+    mat2 rotate(float a) {
+    	float s = sin(a);
+    	float c = cos(a);
+    	return mat2(c, -s, s, c);
+    }
+    void main() {
+    	vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / u_resolution.y;
+    	float scl = mix(3.5, 6.5, cos(u_time - length(uv) * 5.0) * 0.5 + 0.5);
+    	uv *= scl;
+    	uv *= cos(uv) * sin(uv.yx);
+    	uv *= rotate(sin(u_time * 0.333));
+    	vec3 color = vec3(0);
+    	// color.b = (smoothstep(0.4, 0.6, (uv.x + uv.y) / 2.0) - 0.4) / 0.2;
+    	color.r = acos(cos(uv.x * 10.0 + u_time));
+    	color.g = acos(sin(uv.y * 10.0 + u_time));
+    	color.rg /= 3.14159;
+    	color.rg *= rotate(0.7853975);
+    	// color.r = 0.0;
+    	float v = abs(color.g - cos(u_time + pow(tan(uv.y + sin(u_time) * 0.2), 3.0) + pow(uv.x, 2.0)) * 0.5 - 0.71);
+    	color.r = smoothstep(0.49, 0.51, color.r);
+    	color.g *= smoothstep(0.49, 0.51, v);
+    	color.b = smoothstep(0.49, 0.51, v);
+    	color.gb *= rotate(u_time);
+    	color.gb = abs(color.gb);
+    	gl_FragColor = vec4(color, 1.0);
+    }
+  </script>
+</shader-doodle>
+<!-- partial -->
+  <script src='shader-doodle.umd.js'></script>
+</body>
+
+<!-- Mirrored from digitonaut.com/art/retro_animas/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 16 Feb 2023 11:05:35 GMT -->
+</html>
